@@ -3,11 +3,13 @@
 #include "mruby/value.h"
 #include "mruby/data.h"
 
-struct collapse {
+struct collapse
+{
 	int num;
 };
 
-struct balance {
+struct balance
+{
 	int num;
 };
 
@@ -68,7 +70,8 @@ mrb_collapse_init_copy(mrb_state *mrb, mrb_value copy)
   Balance class's methods.
 */
 mrb_value
-mrb_balance_init(mrb_state *mrb, mrb_value self){
+mrb_balance_init(mrb_state *mrb, mrb_value self)
+{
 
 	struct balance *bal;
 
