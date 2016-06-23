@@ -42,12 +42,34 @@ mrb_collapse_get(mrb_state *mrb, mrb_value self)
 	return mrb_fixnum_value(col->num);
 }
 
+static mrb_value
+mrb_collapse_init_copy(mrb_state *mrb, mrb_value copy)
+{
+	mrb_value src;
+	mrb_get_args(mrb, "o", &src);
+
+	if (mrb_obj_equal(mrb, copy, src)) return copy;
+
+	if (!mrb_obj_is_instance_of(mrb, src, mrb_obj_class(mrb, copy))) {
+		mrb_raise(mrb, E_TYPE_ERROR, "wrong argument class");
+	}
+
+	if (!DATA_PTR(copy)) {
+		DATA_PTR(copy) = (struct collapse *)mrb_malloc(mrb, sizeof(struct collapse));
+		DATA_TYPE(copy) = &mrb_collapse_type;
+	}
+
+	*(struct collapse *)DATA_PTR(copy) = *(struct collapse *)DATA_PTR(src);
+	return copy;
+}
+
+
 /*
   Balance class's methods.
 */
 mrb_value
-mrb_balance_init(mrb_state *mrb, mrb_value self)
-{
+mrb_balance_init(mrb_state *mrb, mrb_value self){
+
 	struct balance *bal;
 
 	bal = (struct balance *)mrb_malloc(mrb, sizeof(struct balance));
@@ -68,6 +90,26 @@ mrb_balance_get(mrb_state *mrb, mrb_value self)
 	return mrb_fixnum_value(bal->num);
 }
 
+static mrb_value
+mrb_balance_init_copy(mrb_state *mrb, mrb_value copy)
+{
+	mrb_value src;
+	mrb_get_args(mrb, "o", &src);
+
+	if (mrb_obj_equal(mrb, copy, src)) return copy;
+
+	if (!mrb_obj_is_instance_of(mrb, src, mrb_obj_class(mrb, copy))) {
+		mrb_raise(mrb, E_TYPE_ERROR, "wrong argument class");
+	}
+
+	if (!DATA_PTR(copy)) {
+		DATA_PTR(copy) = (struct balance *)mrb_malloc(mrb, sizeof(struct balance));
+		DATA_TYPE(copy) = &mrb_balance_type;
+	}
+
+	*(struct balance *)DATA_PTR(copy) = *(struct balance *)DATA_PTR(src);
+	return copy;
+}
 
 /*
   Initializer, Finalizer
@@ -81,12 +123,14 @@ mrb_lmem_gem_init(mrb_state *mrb)
 	col = mrb_define_class(mrb, "Collapse", mrb->object_class);
 	MRB_SET_INSTANCE_TT(col, MRB_TT_DATA);
 	mrb_define_method(mrb, col, "initialize", mrb_collapse_init, MRB_ARGS_NONE());
+	mrb_define_method(mrb, col, "initialize_copy", mrb_collapse_init_copy, MRB_ARGS_NONE());
 	mrb_define_method(mrb, col, "get_value", mrb_collapse_get, MRB_ARGS_NONE());
 
 	// Define struct balance in mruby
 	bal = mrb_define_class(mrb, "Balance", mrb->object_class);
 	MRB_SET_INSTANCE_TT(bal, MRB_TT_DATA);
 	mrb_define_method(mrb, bal, "initialize", mrb_balance_init, MRB_ARGS_NONE());
+	mrb_define_method(mrb, bal, "initialize_copy", mrb_balance_init_copy, MRB_ARGS_NONE());
 	mrb_define_method(mrb, bal, "get_value", mrb_balance_get, MRB_ARGS_NONE());
 
 	return;
