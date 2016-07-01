@@ -13,15 +13,24 @@ struct balance
 	int num;
 };
 
+static mrb_value mrb_collapse_init(mrb_state *, mrb_value);
+static void mrb_collapse_free(mrb_state *, void *);
+static mrb_value mrb_collapse_get(mrb_state *, mrb_value);
+static mrb_value mrb_collapse_init_copy(mrb_state *, mrb_value);
+
+static mrb_value mrb_balance_init(mrb_state *, mrb_value);
+static void mrb_balance_free(mrb_state *, void *);
+static mrb_value mrb_balance_get(mrb_state *, mrb_value);
+static mrb_value mrb_balance_init_copy(mrb_state *, mrb_value);
+
 // You should change function from mrb_free to custum dfree
-// if you use malloc or fopen.
-const static struct mrb_data_type mrb_collapse_type = { "Collapse", mrb_free };
-const static struct mrb_data_type mrb_balance_type = { "Balance", mrb_free };
+const static struct mrb_data_type mrb_collapse_type = { "Collapse", mrb_collapse_free };
+const static struct mrb_data_type mrb_balance_type = { "Balance", mrb_balance_free };
 
 /*
   Collapse class's methods.
 */
-mrb_value
+static mrb_value
 mrb_collapse_init(mrb_state *mrb, mrb_value self)
 {
 	struct collapse *col;
@@ -35,7 +44,14 @@ mrb_collapse_init(mrb_state *mrb, mrb_value self)
 	return self;
 }
 
-mrb_value
+static void
+mrb_collapse_free(mrb_state *mrb, void *ptr)
+{
+	struct collapse *col = ptr;
+	mrb_free(mrb, col);
+}
+
+static mrb_value
 mrb_collapse_get(mrb_state *mrb, mrb_value self)
 {
 	struct collapse *col;
@@ -69,7 +85,7 @@ mrb_collapse_init_copy(mrb_state *mrb, mrb_value copy)
 /*
   Balance class's methods.
 */
-mrb_value
+static mrb_value
 mrb_balance_init(mrb_state *mrb, mrb_value self)
 {
 
@@ -84,7 +100,14 @@ mrb_balance_init(mrb_state *mrb, mrb_value self)
 	return self;
 }
 
-mrb_value
+static void
+mrb_balance_free(mrb_state *mrb, void *ptr)
+{
+	struct balance *bal = ptr;
+	mrb_free(mrb, bal);
+}
+
+static mrb_value
 mrb_balance_get(mrb_state *mrb, mrb_value self)
 {
 	struct balance *bal;
