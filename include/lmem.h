@@ -12,13 +12,11 @@ struct balance
 
 struct collapse
 {
-	int num;
 	struct mrb_value bal;
 };
 
 static mrb_value mrb_collapse_init(mrb_state *, mrb_value);
 static void mrb_collapse_free(mrb_state *, void *);
-static mrb_value mrb_collapse_get(mrb_state *, mrb_value);
 static mrb_value mrb_collapse_init_copy(mrb_state *, mrb_value);
 
 static mrb_value mrb_balance_init(mrb_state *, mrb_value);

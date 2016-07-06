@@ -7,7 +7,6 @@ mrb_collapse_init(mrb_state *mrb, mrb_value self)
 	struct collapse *col;
 
 	col = (struct collapse *)mrb_malloc(mrb, sizeof(struct collapse));
-	col->num = 1000;
 
 	struct RClass *bal = mrb_class_get(mrb, "Balance");
 	mrb_value cv = mrb_obj_value(bal);
@@ -27,16 +26,6 @@ mrb_collapse_free(mrb_state *mrb, void *ptr)
 	fprintf(stdout, "FREE COLLAPSE\n");
 	mrb_free(mrb, col);
 }
-
-static mrb_value
-mrb_collapse_get(mrb_state *mrb, mrb_value self)
-{
-	struct collapse *col;
-	col = DATA_PTR(self);
-
-	return mrb_fixnum_value(col->num);
-}
-
 
 static mrb_value
 mrb_collapse_balance(mrb_state *mrb, mrb_value self)
@@ -125,8 +114,6 @@ mrb_balance_init_copy(mrb_state *mrb, mrb_value copy)
 	return copy;
 }
 
-
-
 void
 mrb_lmem_gem_init(mrb_state *mrb)
 {
@@ -136,14 +123,13 @@ mrb_lmem_gem_init(mrb_state *mrb)
 	MRB_SET_INSTANCE_TT(col, MRB_TT_DATA);
 	mrb_define_method(mrb, col, "initialize", mrb_collapse_init, MRB_ARGS_NONE());
 	mrb_define_method(mrb, col, "initialize_copy", mrb_collapse_init_copy, MRB_ARGS_NONE());
-	mrb_define_method(mrb, col, "get_value", mrb_collapse_get, MRB_ARGS_NONE());
 	mrb_define_method(mrb, col, "balance", mrb_collapse_balance, MRB_ARGS_NONE());
 
 	bal = mrb_define_class(mrb, "Balance", mrb->object_class);
 	MRB_SET_INSTANCE_TT(bal, MRB_TT_DATA);
 	mrb_define_method(mrb, bal, "initialize", mrb_balance_init, MRB_ARGS_REQ(1));
 	mrb_define_method(mrb, bal, "initialize_copy", mrb_balance_init_copy, MRB_ARGS_NONE());
-	mrb_define_method(mrb, bal, "get_value", mrb_balance_get, MRB_ARGS_NONE());
+	mrb_define_method(mrb, bal, "number", mrb_balance_get, MRB_ARGS_NONE());
 
 	return;
 }
