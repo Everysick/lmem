@@ -1,4 +1,6 @@
 # lmem
+[![Build Status](https://travis-ci.org/Everysick/lmem.svg?branch=master)](https://travis-ci.org/Everysick/lmem)
+
 Dangling pointer tester for mruby.
 
 ## Use case
